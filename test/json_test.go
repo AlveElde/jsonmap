@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/metalim/jsonmap"
+	"github.com/AlveElde/jsonmap"
 	"github.com/zeebo/assert"
 )
 

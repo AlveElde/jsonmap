@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/metalim/jsonmap"
+	"github.com/AlveElde/jsonmap"
 )
 
 const (

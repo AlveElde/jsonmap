@@ -1,6 +1,6 @@
 package test_test
 
-import "github.com/metalim/jsonmap"
+import "github.com/AlveElde/jsonmap"
 
 type Key = string
 type Value = any
