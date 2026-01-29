@@ -14,15 +14,17 @@ func (m *Map) MarshalJSON() ([]byte, error) {
 	buf.WriteByte('{')
 	enc := json.NewEncoder(&buf)
 	enc.SetEscapeHTML(m.escapeHTML)
-	for i, key := range m.Keys() {
-		if i > 0 {
+	first := true
+	for el := m.First(); el != nil; el = el.Next() {
+		if !first {
 			buf.WriteByte(',')
 		}
-		if err := enc.Encode(key); err != nil {
+		first = false
+		if err := enc.Encode(el.Key()); err != nil {
 			return nil, err
 		}
 		buf.WriteByte(':')
-		if err := enc.Encode(m.elements[key].value); err != nil {
+		if err := enc.Encode(el.Value()); err != nil {
 			return nil, err
 		}
 	}

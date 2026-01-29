@@ -155,6 +155,26 @@ var ops = []struct {
 	{"Delete", benchmarkMapDelete},
 }
 
+func BenchmarkMarshalJSON(b *testing.B) {
+	sizes := []int{10, 100, 1000, 10000}
+	for _, size := range sizes {
+		b.Run(fmt.Sprintf("size=%d", size), func(b *testing.B) {
+			m := jsonmap.New()
+			for i := 0; i < size; i++ {
+				m.Set(fmt.Sprintf("key%d", i), i)
+			}
+			b.ResetTimer()
+			b.ReportAllocs()
+			for i := 0; i < b.N; i++ {
+				_, err := m.MarshalJSON()
+				if err != nil {
+					b.Fatal(err)
+				}
+			}
+		})
+	}
+}
+
 func Benchmark(b *testing.B) {
 	b.Run("Suite", func(b *testing.B) {
 		for _, mapDef := range mapDefs {

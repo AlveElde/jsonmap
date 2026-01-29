@@ -129,3 +129,48 @@ func testJSONMapOnce(t *testing.T, i int) {
 	assert.False(t, ok)
 	assert.Nil(t, v)
 }
+
+func TestSortKeysBoundaryPointers(t *testing.T) {
+	// Create a map with elements in reverse order
+	m := jsonmap.New()
+	m.Set("c", 3)
+	m.Set("b", 2)
+	m.Set("a", 1)
+
+	// Before sort: order is c, b, a
+	// After sort: order should be a, b, c
+
+	// Sort alphabetically
+	m.SortKeys(func(a, b string) bool {
+		return a < b
+	})
+
+	// Verify the order is correct
+	keys := m.Keys()
+	if len(keys) != 3 || keys[0] != "a" || keys[1] != "b" || keys[2] != "c" {
+		t.Fatalf("unexpected key order: %v", keys)
+	}
+
+	// Check boundary pointers - this is the bug
+	first := m.First()
+	if first == nil {
+		t.Fatal("First() returned nil")
+	}
+	if first.Key() != "a" {
+		t.Fatalf("First key should be 'a', got %q", first.Key())
+	}
+	if first.Prev() != nil {
+		t.Errorf("First().Prev() should be nil, but got element with key %q", first.Prev().Key())
+	}
+
+	last := m.Last()
+	if last == nil {
+		t.Fatal("Last() returned nil")
+	}
+	if last.Key() != "c" {
+		t.Fatalf("Last key should be 'c', got %q", last.Key())
+	}
+	if last.Next() != nil {
+		t.Errorf("Last().Next() should be nil, but got element with key %q", last.Next().Key())
+	}
+}

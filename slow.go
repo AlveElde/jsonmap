@@ -62,6 +62,8 @@ func (m *Map) SortKeys(less func(a, b Key) bool) {
 	})
 	m.first = elements[0]
 	m.last = elements[len(elements)-1]
+	m.first.prev = nil
+	m.last.next = nil
 	for i := 0; i < len(elements)-1; i++ {
 		elements[i].next = elements[i+1]
 		elements[i+1].prev = elements[i]
